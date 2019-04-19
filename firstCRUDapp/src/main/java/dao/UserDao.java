@@ -17,5 +17,8 @@ public interface UserDao {
 
     Auto findAutoByID(int id);
 
-    List<User> findAll();
+    List findAll();
+
+    void addAuto(User user, Auto auto);
 }
+

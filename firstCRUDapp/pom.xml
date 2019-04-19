@@ -4,6 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!--
+        Если нет определнных требований, то используйте Java 8
+    -->
+
     <groupId>firstCRUDapp</groupId>
     <artifactId>firstCRUDapp</artifactId>
     <version>1.0</version>
@@ -13,8 +17,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>7</source>
-                    <target>7</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -24,7 +28,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.5.jre7</version>
+            <version>42.2.5</version>
         </dependency>
 
         <dependency>
@@ -32,8 +36,5 @@
             <artifactId>hibernate-core</artifactId>
             <version>5.2.18.Final</version>
         </dependency>
-
     </dependencies>
-
-
 </project>
