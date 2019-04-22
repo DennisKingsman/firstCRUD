@@ -2,8 +2,8 @@ package dao;
 
 import models.Auto;
 import models.User;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import utils.HibernateSessionFactoryUtil;
 
@@ -13,63 +13,77 @@ public class UserDaoImpl implements UserDao{
 // jPoint 2017 alexei shipilev
     @Override
     public User findByID(int id){
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        User user = session.get(User.class, id);
-        tx1.commit();
-        session.getSessionFactory().close();
-        return user;
-
-       // return (User) HibernateSessionFactoryUtil.getSessionFactory().openStatelessSession().get(User.class, id);
-
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction tx1 = session.beginTransaction();
+            User user = session.get(User.class, id);
+            Hibernate.initialize(user.getAutos());
+            tx1.commit();
+            session.close();
+            return user;
+        }
     }
 
     @Override
     public void save(User user){
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        session.save(user);
-        tx1.commit();
-        session.getSessionFactory().close();
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction tx1 = session.beginTransaction();
+            session.save(user);
+            tx1.commit();
+            session.close();
+        }
     }
 
     @Override
     public void update(User user){
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        session.update(user);
-        tx1.commit();
-        session.getSessionFactory().close();
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction tx1 = session.beginTransaction();
+            session.update(user);
+            tx1.commit();
+            session.close();
+        }
     }
 
     @Override
     public void delete(User user){
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        session.delete(user);
-        tx1.commit();
-        session.getSessionFactory().close();
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction tx1 = session.beginTransaction();
+            session.delete(user);
+            tx1.commit();
+            session.close();
+        }
     }
 
     @Override
     public Auto findAutoByID(int id){
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        Auto auto = session.get(Auto.class, id);
-        tx1.commit();
-        session.getSessionFactory().close();
-        return auto;
-
-        //return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Auto.class, id);
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction tx1 = session.beginTransaction();
+            Auto auto = session.get(Auto.class, id);
+            tx1.commit();
+            session.close();
+            return auto;
+        }
     }
 
     @Override
-    public List<User> findAll(){
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        List<User> users = session.createQuery("From User").list();
-        tx1.commit();
-        session.getSessionFactory().close();
-        return users;
+    public List findAll(){
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction tx1 = session.beginTransaction();
+            List users = session.createQuery("From User").list();
+            tx1.commit();
+            session.close();
+            return users;
+        }
+    }
+
+    @Override
+    public void addAuto(User user, Auto auto) {
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()){
+            Transaction tx1 = session.beginTransaction();
+            session.save(auto);
+            user.getAutos().add(auto);
+            session.update(user);
+            tx1.commit();
+            session.close();
+        }
     }
 }

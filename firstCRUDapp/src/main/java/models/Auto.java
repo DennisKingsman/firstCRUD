@@ -18,6 +18,7 @@ public class Auto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "a_user_id") //a_user_id is foreign key
+
     private User user;
 
     public Auto(){}

@@ -8,6 +8,7 @@ import models.User;
 import java.util.List;
 
 public class UserService {
+
     private UserDao userDao = new UserDaoImpl();
 
     public UserService(){
@@ -35,5 +36,9 @@ public class UserService {
 
     public Auto findAutoByID(int id){
         return userDao.findAutoByID(id);
+    }
+
+    public void addAuto(User user, Auto auto) {
+        userDao.addAuto(user, auto);
     }
 }
